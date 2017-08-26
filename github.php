@@ -50,7 +50,6 @@ if(get('code')) {
     'client_id' => $githubClientID,
     'client_secret' => $githubClientSecret,
     'redirect_uri' => $baseURL,
-    'state' => $_SESSION['state'],
     'code' => get('code')
   ));
   $_SESSION['access_token'] = $token->access_token;
