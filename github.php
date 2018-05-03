@@ -19,7 +19,8 @@ $baseURL = 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
 session_start();
 
 
-// Start the login process by sending the user to Github's authorization page
+// Start the login process by sending the user
+// to Github's authorization page
 if(isset($_GET['action']) && $_GET['action'] == 'login') {
   unset($_SESSION['access_token']);
 
@@ -33,10 +34,12 @@ if(isset($_GET['action']) && $_GET['action'] == 'login') {
     'scope' => 'user public_repo',
     'state' => $_SESSION['state']
   );
+
   // Redirect the user to Github's authorization page
-  header('Location: ' . $authorizeURL . '?' . http_build_query($params));
+  header('Location: '.$authorizeURL.'?'.http_build_query($params));
   die();
 }
+
 
 if(isset($_GET['action']) && $_GET['action'] == 'logout') {
   unset($_SESSION['access_token']);
@@ -44,11 +47,13 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
   die();
 }
 
-// When Github redirects the user back here, there will be a "code" and "state"
-// parameter in the query string
+// When Github redirects the user back here,
+// there will be a "code" and "state" parameter in the query string
 if(isset($_GET['code'])) {
   // Verify the state matches our stored state
-  if(!isset($_GET['state']) || $_SESSION['state'] != $_GET['state']) {
+  if(!isset($_GET['state'])
+    || $_SESSION['state'] != $_GET['state']) {
+
     header('Location: ' . $baseURL . '?error=invalid_state');
     die();
   }
@@ -61,14 +66,14 @@ if(isset($_GET['code'])) {
     'redirect_uri' => $baseURL,
     'code' => $_GET['code']
   ));
-
   $_SESSION['access_token'] = $token['access_token'];
+
   header('Location: ' . $baseURL);
   die();
 }
 
-if(isset($_GET['action']) && $_GET['action'] == 'repos') {
 
+if(isset($_GET['action']) && $_GET['action'] == 'repos') {
   // Find all repos created by the authenticated user
   $repos = apiRequest($apiURLBase.'user/repos?'.http_build_query([
     'sort' => 'created',
@@ -77,14 +82,14 @@ if(isset($_GET['action']) && $_GET['action'] == 'repos') {
 
   echo '<ul>';
   foreach($repos as $repo) {
-    echo '<li><a href="' . $repo['html_url'] . '">' . $repo['name'] . '</a></li>';
+    echo '<li><a href="' . $repo['html_url'] . '">'
+      . $repo['name'] . '</a></li>';
   }
   echo '</ul>';
-
-  die();
 }
 
-// If there is an access token in the session, the user is logged in
+// If there is an access token in the session
+// the user is already logged in
 if(!isset($_GET['action'])) {
   if(!empty($_SESSION['access_token'])) {
     echo '<h3>Logged In</h3>';
