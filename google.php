@@ -29,7 +29,7 @@ if(isset($_GET['action']) && $_GET['action'] == 'login') {
     'response_type' => 'code',
     'client_id' => $googleClientID,
     'redirect_uri' => $baseURL,
-    'scope' => 'openid email https://www.googleapis.com/auth/userinfo.profile',
+    'scope' => 'openid email',
     'state' => $_SESSION['state']
   );
 
